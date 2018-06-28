@@ -29,6 +29,7 @@ namespace Kinect4ddr
         bool _customBaseSet = false;
         CameraSpacePoint _flexBase;
         CameraSpacePoint _customBase;
+        Vector4 _floor;
 
         KinectSensor _sensor;
         MultiSourceFrameReader _reader;
@@ -44,6 +45,7 @@ namespace Kinect4ddr
         float th_lr = 0.2f;
         float th_up = 0.3f;
         float th_down = -0.1f;
+        float th_high = 0.1f;
 
        InputSimulator inputSim;
 
@@ -142,6 +144,8 @@ namespace Kinect4ddr
 
                     frame.GetAndRefreshBodyData(_bodies);
 
+                    _floor = frame.FloorClipPlane;
+
                     foreach (var body in _bodies)
                     {
                         if (body != null)
@@ -154,7 +158,8 @@ namespace Kinect4ddr
                                     canvas.DrawSkeleton(body);
                                 }
                                 DisplayInfo(body);
-                                DisplayControls(body);
+                                //DisplayControls(body);
+                                DisplayControlsV2(body);
                             }
                         }
                     }
@@ -278,6 +283,161 @@ namespace Kinect4ddr
                 }
             }
 
+        }
+
+        private void DisplayControlsV2(Body body)
+        {
+            _flexBase = body.Joints[JointType.SpineBase].Position;
+
+            var jbase = _customBaseSet ? _customBase : _flexBase;
+            var jleft = body.Joints[JointType.FootLeft].Position;
+            var jright = body.Joints[JointType.FootRight].Position;
+
+            //TbPseudoConsole.Text = "height = " + DistanceFrom(jleft);
+
+            // left field
+            if((jbase.X - jleft.X) > th_lr)
+            {  
+                if(DistanceFrom(jleft) < th_high)
+                {
+                    tbLeft.Background = Brushes.Yellow;
+                    if (!_isLeft)
+                    {
+                        _isLeft = true;
+                        inputSim.Keyboard.KeyDown(WindowsInput.Native.VirtualKeyCode.LEFT);
+                    }
+                }
+                else
+                {
+                    tbLeft.Background = Brushes.Green;
+                    if (_isLeft)
+                    {
+                        _isLeft = false;
+                        inputSim.Keyboard.KeyUp(WindowsInput.Native.VirtualKeyCode.LEFT);
+                    }
+                }
+            }
+            else
+            {
+                if (_isLeft)
+                {
+                    inputSim.Keyboard.KeyUp(WindowsInput.Native.VirtualKeyCode.LEFT);
+                }
+                _isLeft = false;
+                tbLeft.Background = Brushes.DarkGray;
+            }
+
+
+            // right field
+            if ((jbase.X - jright.X) < (th_lr * - 1))
+            {
+                //send button down
+                if (DistanceFrom(jright) < th_high)
+                {
+                    tbRight.Background = Brushes.Yellow;
+                    if (!_isRight)
+                    {
+                        _isRight = true;
+                        inputSim.Keyboard.KeyDown(WindowsInput.Native.VirtualKeyCode.RIGHT);
+                    }
+                }
+                else
+                {
+                    tbRight.Background = Brushes.Green;
+                    if (_isRight)
+                    {
+                        _isRight = false;
+                        inputSim.Keyboard.KeyUp(WindowsInput.Native.VirtualKeyCode.RIGHT);
+                    }
+                }
+            }
+            else
+            {
+                if (_isRight)
+                {
+                    inputSim.Keyboard.KeyUp(WindowsInput.Native.VirtualKeyCode.RIGHT);
+                }
+                _isRight = false;
+                tbRight.Background = Brushes.DarkGray;
+            }
+
+            // up field
+            if ((jbase.Z - jleft.Z) > th_up
+                || (jbase.Z - jright.Z) > th_up)
+            {
+                if ((jbase.Z - jleft.Z) > th_up && DistanceFrom(jleft) < th_high
+                    || (jbase.Z - jright.Z) > th_up && DistanceFrom(jright) <th_high)
+                {
+                    tbUp.Background = Brushes.Yellow;
+                    if (!_isUp)
+                    {
+                        _isUp = true;
+                        inputSim.Keyboard.KeyDown(WindowsInput.Native.VirtualKeyCode.UP);
+                    }
+                }
+                else
+                {
+                    tbUp.Background = Brushes.Green;
+                    if (_isUp)
+                    {
+                        _isUp = false;
+                        inputSim.Keyboard.KeyUp(WindowsInput.Native.VirtualKeyCode.UP);
+                    }
+                }
+            }
+            else
+            {
+                if (_isUp)
+                {
+                    inputSim.Keyboard.KeyUp(WindowsInput.Native.VirtualKeyCode.UP);
+                }
+                _isUp = false;
+                tbUp.Background = Brushes.DarkGray;
+            }
+
+            // down field
+            if ((jbase.Z - jleft.Z) < th_down
+                || (jbase.Z - jright.Z) < th_down)
+            {
+                if ((jbase.Z - jleft.Z) < th_down && DistanceFrom(jleft) < th_high
+                    || (jbase.Z - jright.Z) < th_down && DistanceFrom(jright) < th_high)
+                {
+                    tbDown.Background = Brushes.Yellow;
+                    if (!_isDown)
+                    {
+                        _isDown = true;
+                        inputSim.Keyboard.KeyDown(WindowsInput.Native.VirtualKeyCode.DOWN);
+                    }
+                }
+                else
+                {
+                    tbDown.Background = Brushes.Green;
+                    if (_isDown)
+                    {
+                        _isDown = false;
+                        inputSim.Keyboard.KeyUp(WindowsInput.Native.VirtualKeyCode.DOWN);
+                    }
+                }
+            }
+            else
+            {
+                if (_isDown)
+                {
+                    inputSim.Keyboard.KeyUp(WindowsInput.Native.VirtualKeyCode.DOWN);
+                }
+                _isDown = false;
+                tbDown.Background = Brushes.DarkGray;
+            }
+
+        }
+
+
+        public double DistanceFrom(CameraSpacePoint point)
+        {
+            double numerator = _floor.X * point.X + _floor.Y * point.Y + _floor.Z * point.Z + _floor.W;
+            double denominator = Math.Sqrt(_floor.X * _floor.X + _floor.Y * _floor.Y + _floor.Z * _floor.Z);
+
+            return numerator / denominator;
         }
 
         private void BtnSetBase_Click(object sender, RoutedEventArgs e)
