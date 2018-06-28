@@ -43,12 +43,12 @@ namespace Kinect4ddr
 
         // threshholds
         double th_lr = 0.2;
-        double th_up = 0.3;
-        double th_down = -0.1;
-        double th_high = 0.1;
+        double th_up = 0.2;
+        double th_down = -0.15;
+        double th_high = 0.15;
 
         bool _useEnhancedMode = true;
-        bool _useAnkles = false;
+        bool _useAnkles = true;
 
        InputSimulator inputSim;
 
