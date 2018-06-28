@@ -31,7 +31,7 @@
         <Image Grid.Row="2" Grid.Column="0" Name="camera" />
         <Canvas Grid.Row="2" Grid.Column="0" Name="canvas" />
 
-        <StackPanel Grid.Row="3" Grid.Column="0" Margin="15 15 0 0">
+        <!--<StackPanel Grid.Row="3" Grid.Column="0" Margin="15 15 0 0">
             <TextBlock>Left Foot</TextBlock>
             <TextBlock Margin="5 0 0 5" Name="tbLeftFoot" />
             <TextBlock>Right Foot</TextBlock>
@@ -40,8 +40,40 @@
             <TextBlock Margin="5 0 0 5" Name="tbCenterHead" />
             <TextBlock>Center Bottom</TextBlock>
             <TextBlock Margin="5 0 0 5" Name="tbCenterBottom" />
+        </StackPanel>-->
+
+        <Grid Grid.Row="3" Grid.Column="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Button Grid.Row="0" Grid.Column="1" Name="BtnEnhanced" IsEnabled="False" Click="BtnEnhanced_Click">Enhanced</Button>
+            <Button Grid.Row="0" Grid.Column="0" Name="BtnBasic" Click="BtnBasic_Click">Basic</Button>
+
+            <Button Grid.Row="1" Grid.Column="1" Name="BtnAnkle" Click="BtnAnkle_Click">Ankles</Button>
+            <Button Grid.Row="1" Grid.Column="0" Name="BtnFoot" IsEnabled="False" Click="BtnFoot_Click">Feet</Button>
             
-        </StackPanel>
+            <TextBlock Grid.Row="2" Grid.Column="0" Margin="0 10 0 5">Threshholds:</TextBlock>
+            <TextBlock Grid.Row="3" Grid.Column="0">Left/Right</TextBlock>
+            <TextBox Grid.Row="3" Grid.Column="1" Name="tbThLeftRight"/>
+            <TextBlock Grid.Row="4" Grid.Column="0">Front</TextBlock>
+            <TextBox Grid.Row="4" Grid.Column="1" Name="tbThFront"/>
+            <TextBlock Grid.Row="5" Grid.Column="0">Back</TextBlock>
+            <TextBox Grid.Row="5" Grid.Column="1" Name="tbThBack"/>
+            <TextBlock Grid.Row="6" Grid.Column="0">Height</TextBlock>
+            <TextBox Grid.Row="6" Grid.Column="1" Name="tbThTab"/>
+        </Grid>
+        
+        
 
         <Grid Name="ControlGrid" Grid.Row="1" Grid.Column="1" Grid.RowSpan="3" Margin="40 40 40 40">
             <Grid.ColumnDefinitions>

@@ -42,10 +42,13 @@ namespace Kinect4ddr
         bool _isRight;
 
         // threshholds
-        float th_lr = 0.2f;
-        float th_up = 0.3f;
-        float th_down = -0.1f;
-        float th_high = 0.1f;
+        double th_lr = 0.2;
+        double th_up = 0.3;
+        double th_down = -0.1;
+        double th_high = 0.1;
+
+        bool _useEnhancedMode = true;
+        bool _useAnkles = false;
 
        InputSimulator inputSim;
 
@@ -77,6 +80,11 @@ namespace Kinect4ddr
             _isUp = false;
             _isRight = false;
 
+            tbThBack.Text = th_down.ToString();
+            tbThFront.Text = th_up.ToString();
+            tbThLeftRight.Text = th_lr.ToString();
+            tbThTab.Text = th_high.ToString();
+
             inputSim = new InputSimulator();
         }
 
@@ -95,6 +103,12 @@ namespace Kinect4ddr
 
         void Reader_MultiSourceFrameArrived(object sender, MultiSourceFrameArrivedEventArgs e)
         {
+            Double.TryParse(tbThTab.Text, out th_high);
+            Double.TryParse(tbThLeftRight.Text, out th_lr);
+            Double.TryParse(tbThFront.Text, out th_up);
+            Double.TryParse(tbThBack.Text, out th_down);
+
+
             var reference = e.FrameReference.AcquireFrame();
 
             // Color
@@ -157,9 +171,15 @@ namespace Kinect4ddr
                                 {
                                     canvas.DrawSkeleton(body);
                                 }
-                                DisplayInfo(body);
-                                //DisplayControls(body);
-                                DisplayControlsV2(body);
+                                //DisplayInfo(body);
+                                if (_useEnhancedMode)
+                                {
+                                    DisplayControlsV2(body);
+                                }
+                                else
+                                {
+                                    DisplayControls(body);
+                                }
                             }
                         }
                     }
@@ -184,13 +204,13 @@ namespace Kinect4ddr
             Infrared
         }
 
-        private void DisplayInfo(Body body)
-        {
-            tbCenterBottom.Text = body.Joints[JointType.SpineBase].ToPositionString();
-            tbCenterHead.Text = body.Joints[JointType.SpineShoulder].ToPositionString();
-            tbLeftFoot.Text = body.Joints[JointType.AnkleLeft].ToPositionString();
-            tbRightFoot.Text = body.Joints[JointType.AnkleRight].ToPositionString();
-        }
+        //private void DisplayInfo(Body body)
+        //{
+        //    tbCenterBottom.Text = body.Joints[JointType.SpineBase].ToPositionString();
+        //    tbCenterHead.Text = body.Joints[JointType.SpineShoulder].ToPositionString();
+        //    tbLeftFoot.Text = body.Joints[JointType.AnkleLeft].ToPositionString();
+        //    tbRightFoot.Text = body.Joints[JointType.AnkleRight].ToPositionString();
+        //}
 
         private void DisplayControls(Body body)
         {
@@ -207,7 +227,6 @@ namespace Kinect4ddr
                 {
                     _isLeft = true;
                     tbLeft.Background = Brushes.Green;
-                    //send button down
                     inputSim.Keyboard.KeyDown(WindowsInput.Native.VirtualKeyCode.LEFT);
                 }
             }
@@ -290,8 +309,8 @@ namespace Kinect4ddr
             _flexBase = body.Joints[JointType.SpineBase].Position;
 
             var jbase = _customBaseSet ? _customBase : _flexBase;
-            var jleft = body.Joints[JointType.FootLeft].Position;
-            var jright = body.Joints[JointType.FootRight].Position;
+            var jleft = _useAnkles ? body.Joints[JointType.AnkleLeft].Position : body.Joints[JointType.FootLeft].Position;
+            var jright = _useAnkles ? body.Joints[JointType.AnkleRight].Position : body.Joints[JointType.FootRight].Position;
 
             //TbPseudoConsole.Text = "height = " + DistanceFrom(jleft);
 
@@ -453,6 +472,34 @@ namespace Kinect4ddr
             _customBaseSet = false;
             BtnRemoveBase.IsEnabled = false;
             BtnSetBase.IsEnabled = true;
+        }
+
+        private void BtnEnhanced_Click(object sender, RoutedEventArgs e)
+        {
+            _useEnhancedMode = true;
+            BtnEnhanced.IsEnabled = false;
+            BtnBasic.IsEnabled = true;
+        }
+
+        private void BtnBasic_Click(object sender, RoutedEventArgs e)
+        {
+            _useEnhancedMode = false;
+            BtnEnhanced.IsEnabled = true;
+            BtnBasic.IsEnabled = false;
+        }
+
+        private void BtnAnkle_Click(object sender, RoutedEventArgs e)
+        {
+            _useAnkles = true;
+            BtnAnkle.IsEnabled = false;
+            BtnFoot.IsEnabled = true;
+        }
+
+        private void BtnFoot_Click(object sender, RoutedEventArgs e)
+        {
+            _useAnkles = false;
+            BtnFoot.IsEnabled = false;
+            BtnAnkle.IsEnabled = true;
         }
     }
 }
