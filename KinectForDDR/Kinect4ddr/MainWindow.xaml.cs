@@ -29,6 +29,16 @@ namespace Kinect4ddr
         MultiSourceFrameReader _reader;
         IList<Body> _bodies;
 
+        // current stances
+        bool _isUp;
+        bool _isLeft;
+        bool _isDown;
+        bool _isRight;
+
+        // threshholds
+        float th_lr = 0.2f;
+        float th_up = 0.3f;
+        float th_down = -0.1f;
 
         public MainWindow()
         {
@@ -52,6 +62,10 @@ namespace Kinect4ddr
             tbDown.Background = Brushes.DarkGray;
             tbLeft.Background = Brushes.DarkGray;
             tbRight.Background = Brushes.DarkGray;
+            _isLeft = false;
+            _isRight = false;
+            _isUp = false;
+            _isRight = false;
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -165,38 +179,90 @@ namespace Kinect4ddr
 
         private void DisplayControls(Body body)
         {
-            ControlGrid.Background = Brushes.LightGray;
-            tbUp.Background = Brushes.DarkGray;
-            tbDown.Background = Brushes.DarkGray;
-            tbLeft.Background = Brushes.DarkGray;
-            tbRight.Background = Brushes.DarkGray;
-
-            float th_lr = 0.2f;
-            float th_up = 0.3f;
-            float th_down = -0.1f;
-
             var jbase = body.Joints[JointType.SpineBase].Position;
             var jleft = body.Joints[JointType.AnkleLeft].Position;
             var jright = body.Joints[JointType.AnkleRight].Position;
 
+            // left field
             if((jbase.X - jleft.X) > th_lr)
             {
-                tbLeft.Background = Brushes.Green;
+                if (!_isLeft)
+                {
+                    _isLeft = true;
+                    tbLeft.Background = Brushes.Green;
+                    //send button down
+                }
             }
+            else
+            {
+                if (_isLeft)
+                {
+                    _isLeft = false;
+                    tbLeft.Background = Brushes.DarkGray;
+                    //send button up
+                }
+            }
+
+            // right field
             if ((jbase.X - jright.X) < (th_lr * - 1))
             {
-                tbRight.Background = Brushes.Green;
+                if (!_isRight)
+                {
+                    _isRight = true;
+                    tbRight.Background = Brushes.Green;
+                    //send button down
+                }
             }
+            else
+            {
+                if (_isRight)
+                {
+                    _isRight = false;
+                    tbRight.Background = Brushes.DarkGray;
+                    //send button up
+                }
+            }
+
             if ((jbase.Z - jleft.Z) > th_up
                 || (jbase.Z - jright.Z) > th_up)
             {
-                tbUp.Background = Brushes.Green;
+                if (!_isUp)
+                {
+                    _isUp = true;
+                    tbUp.Background = Brushes.Green;
+                    //send button down
+                }
             }
+            else
+            {
+                if (_isUp)
+                {
+                    _isUp = false;
+                    tbUp.Background = Brushes.DarkGray;
+                    //send button up
+                }
+            }
+
             if ((jbase.Z - jleft.Z) < th_down
                 || (jbase.Z - jright.Z) < th_down)
             {
-                tbDown.Background = Brushes.Green;
+                if (!_isDown)
+                {
+                    _isDown = true;
+                    tbDown.Background = Brushes.Green;
+                    //send button down
+                }
             }
+            else
+            {
+                if (_isDown)
+                {
+                    _isDown = false;
+                    tbDown.Background = Brushes.DarkGray;
+                    //send button up
+                }
+            }
+
         }
     }
 }
