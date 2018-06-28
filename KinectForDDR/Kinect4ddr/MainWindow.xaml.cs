@@ -26,6 +26,10 @@ namespace Kinect4ddr
         Mode _mode = Mode.Depth;
         bool _displayBody = true;
 
+        bool _customBaseSet = false;
+        CameraSpacePoint _flexBase;
+        CameraSpacePoint _customBase;
+
         KinectSensor _sensor;
         MultiSourceFrameReader _reader;
         IList<Body> _bodies;
@@ -185,7 +189,9 @@ namespace Kinect4ddr
 
         private void DisplayControls(Body body)
         {
-            var jbase = body.Joints[JointType.SpineBase].Position;
+            _flexBase = body.Joints[JointType.SpineBase].Position;
+
+            var jbase = _customBaseSet ? _customBase : _flexBase;
             var jleft = body.Joints[JointType.AnkleLeft].Position;
             var jright = body.Joints[JointType.AnkleRight].Position;
 
@@ -206,7 +212,6 @@ namespace Kinect4ddr
                 {
                     _isLeft = false;
                     tbLeft.Background = Brushes.DarkGray;
-                    //send button up
                     inputSim.Keyboard.KeyUp(WindowsInput.Native.VirtualKeyCode.LEFT);
                 }
             }
@@ -218,7 +223,6 @@ namespace Kinect4ddr
                 {
                     _isRight = true;
                     tbRight.Background = Brushes.Green;
-                    //send button down
                     inputSim.Keyboard.KeyDown(WindowsInput.Native.VirtualKeyCode.RIGHT);
                 }
             }
@@ -228,11 +232,11 @@ namespace Kinect4ddr
                 {
                     _isRight = false;
                     tbRight.Background = Brushes.DarkGray;
-                    //send button up
                     inputSim.Keyboard.KeyUp(WindowsInput.Native.VirtualKeyCode.RIGHT);
                 }
             }
 
+            // up field
             if ((jbase.Z - jleft.Z) > th_up
                 || (jbase.Z - jright.Z) > th_up)
             {
@@ -240,7 +244,6 @@ namespace Kinect4ddr
                 {
                     _isUp = true;
                     tbUp.Background = Brushes.Green;
-                    //send button down
                     inputSim.Keyboard.KeyDown(WindowsInput.Native.VirtualKeyCode.UP);
                 }
             }
@@ -250,11 +253,11 @@ namespace Kinect4ddr
                 {
                     _isUp = false;
                     tbUp.Background = Brushes.DarkGray;
-                    //send button up
                     inputSim.Keyboard.KeyUp(WindowsInput.Native.VirtualKeyCode.UP);
                 }
             }
 
+            // down field
             if ((jbase.Z - jleft.Z) < th_down
                 || (jbase.Z - jright.Z) < th_down)
             {
@@ -262,7 +265,6 @@ namespace Kinect4ddr
                 {
                     _isDown = true;
                     tbDown.Background = Brushes.Green;
-                    //send button down
                     inputSim.Keyboard.KeyDown(WindowsInput.Native.VirtualKeyCode.DOWN);
                 }
             }
@@ -272,11 +274,25 @@ namespace Kinect4ddr
                 {
                     _isDown = false;
                     tbDown.Background = Brushes.DarkGray;
-                    //send button up
                     inputSim.Keyboard.KeyUp(WindowsInput.Native.VirtualKeyCode.DOWN);
                 }
             }
 
+        }
+
+        private void BtnSetBase_Click(object sender, RoutedEventArgs e)
+        {
+            _customBase = _flexBase;
+            _customBaseSet = true;
+            BtnRemoveBase.IsEnabled = true;
+            BtnSetBase.IsEnabled = false;
+        }
+
+        private void BtnRemoveBase_Click(object sender, RoutedEventArgs e)
+        {
+            _customBaseSet = false;
+            BtnRemoveBase.IsEnabled = false;
+            BtnSetBase.IsEnabled = true;
         }
     }
 }

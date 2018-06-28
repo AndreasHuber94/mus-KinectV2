@@ -10,6 +10,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -21,11 +22,16 @@
             <TextBlock Name="TbKinectStatus" />
         </StackPanel>
         <TextBox Grid.Row="0" Grid.Column="1" Margin="20 0 20 0" Name="TbPseudoConsole" />
-        
-        <Image Grid.Row="1" Grid.Column="0" Name="camera" />
-        <Canvas Grid.Row="1" Grid.Column="0" Name="canvas" />
 
-        <StackPanel Grid.Row="2" Grid.Column="0" Margin="15 15 0 0">
+        <StackPanel Grid.Row="1" Grid.Column="0">
+            <Button Name="BtnSetBase" Click="BtnSetBase_Click">Set base</Button>
+            <Button Name="BtnRemoveBase" Click="BtnRemoveBase_Click" IsEnabled="False">Remove base</Button>
+        </StackPanel>
+        
+        <Image Grid.Row="2" Grid.Column="0" Name="camera" />
+        <Canvas Grid.Row="2" Grid.Column="0" Name="canvas" />
+
+        <StackPanel Grid.Row="3" Grid.Column="0" Margin="15 15 0 0">
             <TextBlock>Left Foot</TextBlock>
             <TextBlock Margin="5 0 0 5" Name="tbLeftFoot" />
             <TextBlock>Right Foot</TextBlock>
@@ -37,7 +43,7 @@
             
         </StackPanel>
 
-        <Grid Name="ControlGrid" Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Margin="40 40 40 40">
+        <Grid Name="ControlGrid" Grid.Row="1" Grid.Column="1" Grid.RowSpan="3" Margin="40 40 40 40">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
