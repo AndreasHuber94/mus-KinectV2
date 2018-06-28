@@ -5,37 +5,55 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Kinect4ddr"
         mc:Ignorable="d"
-        Title="Kinect4ddr" Height="600" Width="800">
+        Title="Kinect4ddr" Height="600" Width="800" Loaded="Window_Loaded" Closed="Window_Closed">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <StackPanel Grid.Column="0">
-                <TextBlock>Kinectstatus:</TextBlock>
-                <TextBlock Name="TbKinectStatus" />
-            </StackPanel>
-            <TextBlock Grid.Column="1" Name="TbPseudoConsole" />
-        </Grid>
-        <Grid Grid.Row="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="3*"/>
-            </Grid.ColumnDefinitions>
-            <Image Grid.Row="0" Grid.Column="0" Name="camera" />
-            <Canvas Grid.Row="0" Grid.Column="0" Name="canvas" />
-        </Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="3*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Row="0" Grid.Column="0">
+            <TextBlock>Kinectstatus:</TextBlock>
+            <TextBlock Name="TbKinectStatus" />
+        </StackPanel>
+        <TextBox Grid.Row="0" Grid.Column="1" Margin="20 0 20 0" Name="TbPseudoConsole" />
         
+        <Image Grid.Row="1" Grid.Column="0" Name="camera" />
+        <Canvas Grid.Row="1" Grid.Column="0" Name="canvas" />
+
+        <StackPanel Grid.Row="2" Grid.Column="0" Margin="15 15 0 0">
+            <TextBlock>Left Foot</TextBlock>
+            <TextBlock Margin="5 0 0 5" Name="tbLeftFoot" />
+            <TextBlock>Right Foot</TextBlock>
+            <TextBlock Margin="5 0 0 5" Name="tbRightFoot" />
+            <TextBlock>Center Head</TextBlock>
+            <TextBlock Margin="5 0 0 5" Name="tbCenterHead" />
+            <TextBlock>Center Bottom</TextBlock>
+            <TextBlock Margin="5 0 0 5" Name="tbCenterBottom" />
+            
+        </StackPanel>
+
+        <Grid Name="ControlGrid" Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Margin="40 40 40 40">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Name="tbUp" Grid.Row="0" Grid.Column="1"></TextBlock>
+            <TextBlock Name="tbLeft" Grid.Row="1" Grid.Column="0"></TextBlock>
+            <TextBlock Name="tbRight" Grid.Row="1" Grid.Column="2"></TextBlock>
+            <TextBlock Name="tbDown" Grid.Row="2" Grid.Column="1"></TextBlock>
+        </Grid>
+
 
     </Grid>
 </Window>

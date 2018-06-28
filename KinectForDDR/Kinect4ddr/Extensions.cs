@@ -185,8 +185,8 @@ namespace Kinect4ddr
 
             Ellipse ellipse = new Ellipse
             {
-                Width = 20,
-                Height = 20,
+                Width = 5,
+                Height = 5,
                 Fill = new SolidColorBrush(Colors.LightBlue)
             };
 
@@ -209,11 +209,24 @@ namespace Kinect4ddr
                 Y1 = first.Position.Y,
                 X2 = second.Position.X,
                 Y2 = second.Position.Y,
-                StrokeThickness = 8,
+                StrokeThickness = 3,
                 Stroke = new SolidColorBrush(Colors.LightBlue)
             };
 
             canvas.Children.Add(line);
+        }
+
+        #endregion
+
+        #region Utility
+
+        public static string ToPositionString(this Joint joint)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("x: " + joint.Position.X + "; ");
+            sb.AppendLine("y: " + joint.Position.Y + "; ");
+            sb.AppendLine("z: " + joint.Position.Z);
+            return sb.ToString();
         }
 
         #endregion
