@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WindowsInput;
 
 namespace Kinect4ddr
 {
@@ -39,6 +40,9 @@ namespace Kinect4ddr
         float th_lr = 0.2f;
         float th_up = 0.3f;
         float th_down = -0.1f;
+
+       InputSimulator inputSim;
+
 
         public MainWindow()
         {
@@ -66,6 +70,8 @@ namespace Kinect4ddr
             _isRight = false;
             _isUp = false;
             _isRight = false;
+
+            inputSim = new InputSimulator();
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -191,6 +197,7 @@ namespace Kinect4ddr
                     _isLeft = true;
                     tbLeft.Background = Brushes.Green;
                     //send button down
+                    inputSim.Keyboard.KeyDown(WindowsInput.Native.VirtualKeyCode.LEFT);
                 }
             }
             else
@@ -200,6 +207,7 @@ namespace Kinect4ddr
                     _isLeft = false;
                     tbLeft.Background = Brushes.DarkGray;
                     //send button up
+                    inputSim.Keyboard.KeyUp(WindowsInput.Native.VirtualKeyCode.LEFT);
                 }
             }
 
@@ -211,6 +219,7 @@ namespace Kinect4ddr
                     _isRight = true;
                     tbRight.Background = Brushes.Green;
                     //send button down
+                    inputSim.Keyboard.KeyDown(WindowsInput.Native.VirtualKeyCode.RIGHT);
                 }
             }
             else
@@ -220,6 +229,7 @@ namespace Kinect4ddr
                     _isRight = false;
                     tbRight.Background = Brushes.DarkGray;
                     //send button up
+                    inputSim.Keyboard.KeyUp(WindowsInput.Native.VirtualKeyCode.RIGHT);
                 }
             }
 
@@ -231,6 +241,7 @@ namespace Kinect4ddr
                     _isUp = true;
                     tbUp.Background = Brushes.Green;
                     //send button down
+                    inputSim.Keyboard.KeyDown(WindowsInput.Native.VirtualKeyCode.UP);
                 }
             }
             else
@@ -240,6 +251,7 @@ namespace Kinect4ddr
                     _isUp = false;
                     tbUp.Background = Brushes.DarkGray;
                     //send button up
+                    inputSim.Keyboard.KeyUp(WindowsInput.Native.VirtualKeyCode.UP);
                 }
             }
 
@@ -251,6 +263,7 @@ namespace Kinect4ddr
                     _isDown = true;
                     tbDown.Background = Brushes.Green;
                     //send button down
+                    inputSim.Keyboard.KeyDown(WindowsInput.Native.VirtualKeyCode.DOWN);
                 }
             }
             else
@@ -260,6 +273,7 @@ namespace Kinect4ddr
                     _isDown = false;
                     tbDown.Background = Brushes.DarkGray;
                     //send button up
+                    inputSim.Keyboard.KeyUp(WindowsInput.Native.VirtualKeyCode.DOWN);
                 }
             }
 
